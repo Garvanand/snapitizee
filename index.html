@@ -37,7 +37,7 @@
 						<a href="index.html"><img src="images/logo.png"width="150" 
 							height="200" ></a>
 					</li>
-					<li class="nav-item"><a href="#blog">Blo	g</a></li>
+					<li class="nav-item"><a href="#blog">Blog</a></li>
 					<li class="nav-item"><a href="#gallery">Gallery</a></li>
 					<li class="nav-item"><a href="#contact">Contact us</a></li>
 				</ul>
@@ -438,6 +438,48 @@
 
 	<script type="text/javascript" src="js/plugins.js"></script>
 	<script type="text/javascript" src="js/script.js"></script>
+	<!-- Add this div at the end of the body -->
+<div id="chat-container">
+    <div id="chat-header">Chat with Snapitizer</div>
+    <div id="chat-messages"></div>
+    <input type="text" id="user-input" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+</div>
+<script>
+    // Your existing JavaScript code here...
+
+    function sendMessage() {
+        var userInput = document.getElementById("user-input").value;
+        appendMessage("You", userInput);
+
+        // Your AJAX or fetch request to communicate with the server-side Python script
+        // For simplicity, let's assume you have a Python endpoint for the bot at /chat
+        fetch('/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message: userInput }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            appendMessage("Snapitizer", data.message);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+
+    function appendMessage(sender, message) {
+        var chatMessages = document.getElementById("chat-messages");
+        var newMessage = document.createElement("div");
+        newMessage.innerHTML = `<strong>${sender}:</strong> ${message}`;
+        chatMessages.appendChild(newMessage);
+
+        // Scroll to the bottom of the chat container to show the latest messages
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+</script>
 
 </body>
 </html>
